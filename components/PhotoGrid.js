@@ -1,12 +1,15 @@
 import React from 'react'
-import { Dimensions, FlatList, Image } from 'react-native'
-
-import { formatPhotoUri } from '../api/picsum'
+import { Dimensions, FlatList, Image, TouchableOpacity, PixelRatio } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
+import { formatPhotoUri, getPhotoUri } from '../api/picsum'
+import { width } from '../constants'
 
 export default function PhotoGrid({ photos, numColumns, onEndReached }) {
-  const { width } = Dimensions.get('window')
-
   const size = width / numColumns
+
+  const pixelPerfectSize = PixelRatio.getPixelSizeForLayoutSize(size)
+
+  const navigation = useNavigation();
 
   return (
     <FlatList
@@ -15,13 +18,19 @@ export default function PhotoGrid({ photos, numColumns, onEndReached }) {
       numColumns={numColumns}
       onEndReached={onEndReached}
       renderItem={({ item }) => (
-        <Image
-          source={{
-            width: size,
-            height: size,
-            uri: formatPhotoUri(item.id, size, size),
-          }}
-        />
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Details", {
+            url: getPhotoUri(item.id),
+          })}
+        >
+          <Image
+            source={{
+              width: size,
+              height: size,
+              uri: formatPhotoUri(item.id, pixelPerfectSize, pixelPerfectSize),
+            }}
+          />
+        </TouchableOpacity>
       )}
     />
   )

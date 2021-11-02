@@ -12,3 +12,7 @@ export function formatPhotoUri(id, width, height) {
   )}`
 }
 
+export function getPhotoUri(id) {
+  return `https://picsum.photos/id/${id}/2000/2000`
+}
+
